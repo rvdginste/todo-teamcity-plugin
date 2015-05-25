@@ -1,0 +1,6 @@
+/.idea/workspace.xml
+/build/target
+/target
+/todo-teamcity-plugin-agent/target
+/todo-teamcity-plugin-common/target
+/todo-teamcity-plugin-server/target
