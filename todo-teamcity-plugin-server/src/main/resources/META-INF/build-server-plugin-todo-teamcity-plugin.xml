@@ -2,4 +2,5 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans default-autowire="constructor">
     <bean id="todoRunType" class="org.r4d5.teamcity.todo.server.TodoRunType"/>
+    <bean id="todoLogTab" class="org.r4d5.teamcity.todo.server.TodoLogTab"/>
 </beans>
