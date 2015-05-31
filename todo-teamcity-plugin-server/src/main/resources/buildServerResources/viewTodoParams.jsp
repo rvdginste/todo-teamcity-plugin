@@ -1,7 +1,6 @@
 <%@ page import="org.r4d5.teamcity.todo.common.TodoBuildRunnerConstants" %>
 <%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
 <div class="parameter">
     Include Patterns:<strong><props:displayValue name="<%=TodoBuildRunnerConstants.PARAM_INCLUDE_REGEX%>" emptyValue="none"/></strong>
