@@ -19,9 +19,14 @@ package org.r4d5.teamcity.todo.common;
 
 public class TodoBuildRunnerConstants {
     public static final String TODO_RUN_TYPE = "todo-build-runner";
+
     public static final String PARAM_INCLUDE_REGEX = "org.r4d5.teamcity.todo.include";
     public static final String PARAM_EXCLUDE_REGEX = "org.r4d5.teamcity.todo.exclude";
     public static final String PARAM_PATTERN_MINOR_REGEX = "org.r4d5.teamcity.todo.minor";
     public static final String PARAM_PATTERN_MAJOR_REGEX = "org.r4d5.teamcity.todo.major";
     public static final String PARAM_PATTERN_CRITICAL_REGEX = "org.r4d5.teamcity.todo.critical";
+
+    public static final String TODO_REPORTING_FOLDER = "org.r4d5.teamcity.todo.report";
+
+    public static final String TODO_REPORTING_FILENAME = "TodoScannerResults.ser";
 }

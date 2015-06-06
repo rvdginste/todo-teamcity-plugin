@@ -17,14 +17,19 @@
 
 package org.r4d5.teamcity.todo.common;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TodoScanner {
 
-    final private Path root;
+    final private Path workingRoot;
+    final private Path reportingRoot;
     final private List<String> includes;
     final private List<String> excludes;
     final private List<String> minors;
@@ -33,13 +38,15 @@ public class TodoScanner {
 
 
     public TodoScanner(
-            final Path root,
+            final Path workingRoot,
+            final Path reportingRoot,
             final List<String> includes,
             final List<String> excludes,
             final List<String> minors,
             final List<String> majors,
             final List<String> criticals) throws IOException {
-        this.root = root;
+        this.workingRoot = workingRoot;
+        this.reportingRoot = reportingRoot;
         this.includes = includes;
         this.excludes = excludes;
         this.minors = minors;
@@ -50,7 +57,7 @@ public class TodoScanner {
     public void Run(InterruptionChecker interruptionChecker, StatusLogger statusLogger) throws IOException {
 
         // logging the settings
-        statusLogger.info(String.format("Root path is [%1$s].", root.toString()));
+        statusLogger.info(String.format("Root path is [%1$s].", workingRoot.toString()));
         for (String include : includes) {
             statusLogger.info(String.format("Included is [%1$s].", include));
         }
@@ -60,8 +67,8 @@ public class TodoScanner {
 
         // gather the files that need to be checked
         statusLogger.info("Start gathering the files to be checked.");
-        GlobPatternMatcherFileVisitor visitor = new GlobPatternMatcherFileVisitor(root, includes, excludes, interruptionChecker);
-        Files.walkFileTree(root, visitor);
+        GlobPatternMatcherFileVisitor visitor = new GlobPatternMatcherFileVisitor(workingRoot, includes, excludes, interruptionChecker);
+        Files.walkFileTree(workingRoot, visitor);
         List<Path> foundPaths = visitor.getFoundPaths();
         statusLogger.info(String.format("Gathered %1$d files.", foundPaths.size()));
 
@@ -83,28 +90,29 @@ public class TodoScanner {
         TodoPatternScanner scanner = new TodoPatternScanner(minors, majors, criticals);
 
         // scan for ToDo patterns
+        ArrayList<TodoScanResult> scanResults = new ArrayList<>(foundPaths.size());
         for (Path path : foundPaths) {
-            statusLogger.info(String.format("Scanning file [%1$s]", path.toString()));
-            final TodoScanResult result = scanner.scan(path);
-            int minor = 0, major = 0, critical = 0;
-            for (TodoLine todo : result.getTodos()) {
-                switch (todo.getLevel()) {
-                    case MINOR:
-                        minor++;
-                        break;
-                    case MAJOR:
-                        major++;
-                        break;
-                    case CRITICAL:
-                        critical++;
-                        break;
-                }
-            }
-            statusLogger.info(String.format("Found [%1$d minor, %2$d major, %3$d critical]", minor, major, critical));
+            Path relativePath = workingRoot.relativize(path);
+            statusLogger.info(String.format("Scanning file [%1$s]", relativePath.toString()));
+
+            Path scanResultPath = reportingRoot.resolve(relativePath);
+            statusLogger.info(String.format("Scan result into [%1$s]", scanResultPath.toString()));
+
+            final TodoScanResult result = scanner.scan(workingRoot, path);
+            scanResults.add(result);
             interruptionChecker.isInterrupted();
         }
 
         // persist the results somewhere
-        interruptionChecker.isInterrupted();
+        try {
+            Path reportPath = Paths.get(reportingRoot.toString(), TodoBuildRunnerConstants.TODO_REPORTING_FILENAME);
+            statusLogger.info(String.format("Storing TodoScanResults in [%1$s]", reportPath.toString()));
+            FileOutputStream fileOut = new FileOutputStream(reportPath.toString());
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(scanResults);
+            objectOut.close();
+        } catch (IOException e) {
+            // TODO
+        }
     }
 }

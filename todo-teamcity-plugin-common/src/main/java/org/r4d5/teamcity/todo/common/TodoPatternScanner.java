@@ -110,7 +110,7 @@ public class TodoPatternScanner {
         return Charset.forName(match.getName());
     }
 
-    private TodoScanResult scan(Path file, Charset charset) throws IOException {
+    private TodoScanResult scan(Path workRoot, Path file, Charset charset) throws IOException {
 
         long startTime = System.nanoTime();
 
@@ -130,16 +130,16 @@ public class TodoPatternScanner {
                 }
             }
         } catch (MalformedInputException e) {
-            return scan(file, guessCharset(file, charset));
+            return scan(workRoot, file, guessCharset(file, charset));
         }
 
         TodoLine[] todoLineArray = todos.toArray(new TodoLine[0]);
         long estimatedTime = (System.nanoTime() - startTime) / 1_000_000;
 
-        return new TodoScanResult(file, charset, estimatedTime, todoLineArray);
+        return new TodoScanResult(workRoot.relativize(file), charset, estimatedTime, todoLineArray);
     }
 
-    public TodoScanResult scan(Path file) throws IOException {
-        return scan(file, StandardCharsets.UTF_8);
+    public TodoScanResult scan(Path workRoot, Path file) throws IOException {
+        return scan(workRoot, file, StandardCharsets.UTF_8);
     }
 }

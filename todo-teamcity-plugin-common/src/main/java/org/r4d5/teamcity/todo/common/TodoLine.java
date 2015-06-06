@@ -17,7 +17,9 @@
 
 package org.r4d5.teamcity.todo.common;
 
-public class TodoLine {
+import java.io.Serializable;
+
+public class TodoLine implements Serializable {
 
     final int lineNumber;
     final TodoLevel level;

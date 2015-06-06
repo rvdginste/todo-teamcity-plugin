@@ -19,6 +19,7 @@ package org.r4d5.teamcity.todo.agent;
 
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.*;
+import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import jetbrains.buildServer.log.Loggers;
 import jetbrains.buildServer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +32,11 @@ import java.util.Map;
 
 public class TodoBuildRunner implements AgentBuildRunner {
 
-    public TodoBuildRunner() {
+    private final ArtifactsWatcher artifactsWatcher;
+
+    public TodoBuildRunner(@NotNull final ArtifactsWatcher artifactsWatcher) {
         Loggers.AGENT.warn("TodoBuildRunner created.");
+        this.artifactsWatcher = artifactsWatcher;
     }
 
     private List<String> getValuesFor(@NotNull Map<String, String> parameters, String parameter) {
@@ -59,11 +63,14 @@ public class TodoBuildRunner implements AgentBuildRunner {
         final List<String> majors = getValuesFor(runnerParameters, TodoBuildRunnerConstants.PARAM_PATTERN_MAJOR_REGEX);
         final List<String> criticals = getValuesFor(runnerParameters, TodoBuildRunnerConstants.PARAM_PATTERN_CRITICAL_REGEX);
 
-        final File root = build.getCheckoutDirectory();
+        final File workingRoot = build.getCheckoutDirectory();
+        final File reportingRoot = build.getBuildTempDirectory();
 
         return new TodoBuildProcessAdapter(
+                artifactsWatcher,
                 build.getBuildLogger(),
-                root,
+                workingRoot,
+                reportingRoot,
                 includes,
                 excludes,
                 minors,

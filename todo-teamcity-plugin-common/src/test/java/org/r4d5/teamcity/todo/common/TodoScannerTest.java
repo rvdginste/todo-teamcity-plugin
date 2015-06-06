@@ -88,7 +88,7 @@ public class TodoScannerTest {
 
         List<TodoScanResult> result = new ArrayList<>();
         for (Path file : foundPaths) {
-            result.add(scanner.scan(file));
+            result.add(scanner.scan(Paths.get("/tmp/affiliations"), file));
         }
 
         long endTime = System.nanoTime();
@@ -99,7 +99,7 @@ public class TodoScannerTest {
 
         for (TodoScanResult fileResult : result) {
             if (fileResult.getTodos().length > 0) {
-                System.out.println(String.format("File: %s (%d ms)", fileResult.getFile().getFileName(), fileResult.getRunTime()));
+                System.out.println(String.format("File: %s (%d ms)", fileResult.getFilePath(), fileResult.getRunTime()));
                 for (TodoLine todo : fileResult.getTodos()) {
                     System.out.println(String.format("%5d : %10s %s", todo.getLineNumber(), todo.getLevel(), todo.getLine()));
                 }

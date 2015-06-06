@@ -17,29 +17,34 @@
 
 package org.r4d5.teamcity.todo.common;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
-public class TodoScanResult {
+public class TodoScanResult implements Serializable {
 
-    final Path file;
-    final Charset charset;
+    final String relativePath;
+    final String charsetName;
     final long runTime;
     final TodoLine[] todos;
 
-    public TodoScanResult(Path file, Charset charset, long runTime, TodoLine[] todos) {
-        this.file = file;
-        this.charset = charset;
+    public TodoScanResult(Path relativeFile, Charset charset, long runTime, TodoLine[] todos) {
+        this.relativePath = relativeFile.toString();
+        this.charsetName = charset.name();
         this.runTime = runTime;
         this.todos = todos;
     }
 
-    public Path getFile() {
-        return file;
+    public String getFilePath() {
+        return relativePath;
+    }
+
+    public String getCharsetName() {
+        return charsetName;
     }
 
     public Charset getCharset() {
-        return charset;
+        return Charset.forName(charsetName);
     }
 
     public TodoLine[] getTodos() {
