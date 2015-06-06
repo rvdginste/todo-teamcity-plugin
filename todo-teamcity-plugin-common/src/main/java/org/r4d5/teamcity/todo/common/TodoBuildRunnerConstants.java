@@ -29,4 +29,6 @@ public class TodoBuildRunnerConstants {
     public static final String TODO_REPORTING_FOLDER = "org.r4d5.teamcity.todo.report";
 
     public static final String TODO_REPORTING_FILENAME = "TodoScannerResults.ser";
+
+    public static final String TODO_REPORTING_IDENTIFICATION = "todoScanResultsReport";
 }
