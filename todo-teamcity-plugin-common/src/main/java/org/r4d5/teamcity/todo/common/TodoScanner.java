@@ -36,6 +36,8 @@ public class TodoScanner {
     final private List<String> majors;
     final private List<String> criticals;
 
+    final private int contextBefore;
+    final private int contextAfter;
 
     public TodoScanner(
             final Path workingRoot,
@@ -45,6 +47,27 @@ public class TodoScanner {
             final List<String> minors,
             final List<String> majors,
             final List<String> criticals) throws IOException {
+        this(workingRoot,
+                reportingRoot,
+                includes,
+                excludes,
+                minors,
+                majors,
+                criticals,
+                2,
+                5);
+    }
+
+    public TodoScanner(
+            final Path workingRoot,
+            final Path reportingRoot,
+            final List<String> includes,
+            final List<String> excludes,
+            final List<String> minors,
+            final List<String> majors,
+            final List<String> criticals,
+            final int contextBefore,
+            final int contextAfter) throws IOException {
         this.workingRoot = workingRoot;
         this.reportingRoot = reportingRoot;
         this.includes = includes;
@@ -52,6 +75,8 @@ public class TodoScanner {
         this.minors = minors;
         this.majors = majors;
         this.criticals = criticals;
+        this.contextBefore = contextBefore;
+        this.contextAfter = contextAfter;
     }
 
     public void Run(InterruptionChecker interruptionChecker, StatusLogger statusLogger) throws IOException {
@@ -87,7 +112,7 @@ public class TodoScanner {
         }
 
         // create todo scanner
-        TodoPatternScanner scanner = new TodoPatternScanner(minors, majors, criticals);
+        TodoPatternScanner scanner = new TodoPatternScanner(minors, majors, criticals, contextBefore, contextAfter);
 
         // scan for ToDo patterns
         ArrayList<TodoScanResult> scanResults = new ArrayList<>(foundPaths.size());

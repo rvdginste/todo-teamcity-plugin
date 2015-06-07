@@ -1,12 +1,60 @@
 <%@ page import="org.r4d5.teamcity.todo.common.TodoBuildRunnerConstants" %>
 <%@ page import="org.r4d5.teamcity.todo.common.TodoScanResult" %>
 <%@ page import="org.r4d5.teamcity.todo.common.TodoLine" %>
+<%@ page import="org.r4d5.teamcity.todo.common.TodoLevel" %>
+<%@ page import="org.unbescape.html.HtmlEscape" %>
 <%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean id="todoScanResultsReport" type="java.util.ArrayList<org.r4d5.teamcity.todo.common.TodoScanResult>" scope="request"/>
 
 <div>
+    <script type="text/javascript">
+        var todoContextVisibility = 0;
+
+        function todoContextVisible() {
+            var i;
+            var elements = document.getElementsByClassName('todoline-context');
+            for (i = 0; i < elements.length; i++) {
+                elements[i].style.display = 'table-row'
+            }
+            todoContextVisibility = 1;
+        }
+
+        function todoContextInvisible() {
+            var i;
+            var elements = document.getElementsByClassName('todoline-context');
+            for (i = 0; i < elements.length; i++) {
+                elements[i].style.display = 'none'
+            }
+            todoContextVisibility = 0;
+        }
+
+        function toggleTodoContextVisibility() {
+            if (todoContextVisibility == 0) {
+                todoContextVisible();
+            } else {
+                todoContextInvisible();
+            }
+        }
+
+        function toggleTodoContextVisibilityForFile(fileIndex) {
+            var i;
+            var elements = document.getElementsByClassName("todoline-context-" + fileIndex);
+            if (elements.length > 0) {
+                var invisible = elements[0].style.display == 'none';
+                var newsetting = invisible ? 'table-row' : 'none';
+                for (i = 0; i < elements.length; i++) {
+                    elements[i].style.display = newsetting;
+                }
+            }
+        }
+    </script>
+
+    <p>
+        <a style="color: dimgrey;font-style: italic" onclick="toggleTodoContextVisibility()">Toggle context</a>
+    </p>
+
     <table>
         <thead>
             <tr style="background-color: ghostwhite">
@@ -14,10 +62,12 @@
             </tr>
         </thead>
         <tbody>
+            <% int fileIndex = 0; %>
             <% for (TodoScanResult todoScanResult : todoScanResultsReport) { %>
+            <%  fileIndex++;  %>
             <%  if (todoScanResult.getTodos().length > 0) { %>
             <tr style="background-color: lightgrey">
-                <th colspan="3"><%= todoScanResult.getFilePath() %></th>
+                <th colspan="3" onclick="toggleTodoContextVisibilityForFile(<%=fileIndex%>)"><%= todoScanResult.getFilePath() %></th>
             </tr>
             <tr style="background-color: ghostwhite">
                 <th>Line</th>
@@ -25,22 +75,29 @@
                 <th>Level</th>
             </tr>
             <%      for (TodoLine todoLine : todoScanResult.getTodos()) { %>
+            <%         if (todoLine.getLevel() == TodoLevel.CONTEXT) { %>
+            <tr class="todoline-context todoline-context-<%=fileIndex%>" style="display: none">
+                <td style="text-align: right; color: darkgrey"><%= todoLine.getLineNumber() %></td>
+                <td style="text-align: left; color: darkgrey; font-family: monospace; white-space: pre-wrap"><%= HtmlEscape.escapeHtml4(todoLine.getLine()) %></td>
+                <td></td>
+            </tr>
+            <%         } else { %>
             <tr>
                 <td style="text-align: right"><%= todoLine.getLineNumber() %></td>
-                <td style="text-align: left"><%= todoLine.getLine() %></td>
+                <td style="text-align: left; font-family: monospace; white-space: pre-wrap"><%= HtmlEscape.escapeHtml4(todoLine.getLine()) %></td>
                 <td style="text-align: center">
-                    <% switch (todoLine.getLevel()) {
-                        case MINOR: %>
+            <%          switch (todoLine.getLevel()) {
+                            case MINOR: %>
                         <img src="${teamcityPluginResourcesPath}question58.svg" height="16" width="16" border="0">
-
-                    <%        break;
-                        case MAJOR: %>
+            <%                  break;
+                            case MAJOR: %>
                         <img src="${teamcityPluginResourcesPath}triangle38.svg" height="16" width="16" border="0">
-                    <%        break;
-                        case CRITICAL: %>
+            <%                  break;
+                            case CRITICAL: %>
                         <img src="${teamcityPluginResourcesPath}lightning46.svg" height="16" width="16" border="0">
-                    <%        break;
-                    } %>
+            <%                  break;
+                        }
+                       } %>
                 </td>
             </tr>
             <%      } %>

@@ -18,6 +18,7 @@
 package org.r4d5.teamcity.todo.common;
 
 public enum TodoLevel {
+    CONTEXT,
     MINOR,
     MAJOR,
     CRITICAL

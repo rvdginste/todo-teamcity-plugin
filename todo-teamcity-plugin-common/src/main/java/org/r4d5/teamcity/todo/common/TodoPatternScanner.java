@@ -31,24 +31,46 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class TodoPatternScanner {
 
+    final private static Comparator<TodoLine> todoLineComparater = new Comparator<TodoLine>() {
+        @Override
+        public int compare(TodoLine todoLine1, TodoLine todoLine2) {
+            return todoLine1.getLineNumber() - todoLine2.getLineNumber();
+        }
+    };
+
     final private Pattern minors;
     final private Pattern majors;
     final private Pattern criticals;
+
+    final private int contextBefore;
+    final private int contextAfter;
+
     final private UniversalDetector detector = new UniversalDetector(null);
 
     public TodoPatternScanner(
             List<String> minors,
             List<String> majors,
             List<String> criticals) {
+        this(minors, majors, criticals, 0, 0);
+    }
+
+
+    public TodoPatternScanner(
+            List<String> minors,
+            List<String> majors,
+            List<String> criticals,
+            int contextBefore,
+            int contextAfter) {
         this.minors = buildPattern(minors);
         this.majors = buildPattern(majors);
         this.criticals = buildPattern(criticals);
+        this.contextBefore = contextBefore;
+        this.contextAfter = contextAfter;
     }
 
     private Pattern buildPattern(List<String> regexes) {
@@ -114,26 +136,62 @@ public class TodoPatternScanner {
 
         long startTime = System.nanoTime();
 
-        List<TodoLine> todos = new ArrayList<>();
+        HashMap<Integer, TodoLine> todoMap = new HashMap<>(10);
+        ContextBuffer buffer = new ContextBuffer(contextBefore);
 
         try (BufferedReader reader = Files.newBufferedReader(file, guessCharset(file, charset))) {
             String line;
             int lineNumber = 0;
+            int match = 0;
+
             while ((line = reader.readLine()) != null) {
+                // context
                 lineNumber++;
+                TodoLine todoLine = null;
+
+                // matching
                 if (criticals.matcher(line).matches()) {
-                    todos.add(new TodoLine(lineNumber, TodoLevel.CRITICAL, line));
+                    todoLine = new TodoLine(lineNumber, TodoLevel.CRITICAL, line);
                 } else if (majors.matcher(line).matches()) {
-                    todos.add(new TodoLine(lineNumber, TodoLevel.MAJOR, line));
+                    todoLine = new TodoLine(lineNumber, TodoLevel.MAJOR, line);
                 } else if (minors.matcher(line).matches()) {
-                    todos.add(new TodoLine(lineNumber, TodoLevel.MINOR, line));
+                    todoLine = new TodoLine(lineNumber, TodoLevel.MINOR, line);
                 }
+
+                // found match ?
+                if (todoLine != null) {
+                    // remember the todoLine
+                    todoMap.put(lineNumber, todoLine);
+
+                    // fix context before
+                    String[] reverse = buffer.getBufferReversed();
+                    for (int i = 0; i < contextBefore; i++) {
+                        int currentLineNumber = lineNumber - i - 1;
+                        if (!todoMap.containsKey(currentLineNumber) && reverse[i] != null) {
+                            todoMap.put(currentLineNumber, new TodoLine(currentLineNumber, TodoLevel.CONTEXT, reverse[i]));
+                        }
+                    }
+
+                    // prepare context after
+                    match = contextAfter;
+                } else {
+                    // context after match ?
+                    if (match > 0) {
+                        todoMap.put(lineNumber, new TodoLine(lineNumber, TodoLevel.CONTEXT, line));
+                        match--;
+                    }
+                }
+
+                // remember current line in the buffer
+                buffer.push(line);
             }
         } catch (MalformedInputException e) {
             return scan(workRoot, file, guessCharset(file, charset));
         }
 
-        TodoLine[] todoLineArray = todos.toArray(new TodoLine[0]);
+        ArrayList<TodoLine> todoLines = new ArrayList<>(todoMap.values());
+        Collections.sort(todoLines, todoLineComparater);
+        TodoLine[] todoLineArray = todoLines.toArray(new TodoLine[0]);
         long estimatedTime = (System.nanoTime() - startTime) / 1_000_000;
 
         return new TodoScanResult(workRoot.relativize(file), charset, estimatedTime, todoLineArray);
