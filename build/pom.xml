@@ -4,7 +4,7 @@
   <parent>
     <artifactId>todo-teamcity-plugin</artifactId>
     <groupId>org.r4d5.teamcity</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>build</artifactId>
   <packaging>pom</packaging>
@@ -18,17 +18,17 @@
       <dependency>
            <groupId>org.r4d5.teamcity</groupId>
            <artifactId>todo-teamcity-plugin-agent</artifactId>
-           <version>1.0-SNAPSHOT</version>
+           <version>1.0.0</version>
       </dependency>
       <dependency>
            <groupId>org.r4d5.teamcity</groupId>
            <artifactId>todo-teamcity-plugin-common</artifactId>
-           <version>1.0-SNAPSHOT</version>
+           <version>1.0.0</version>
       </dependency>
       <dependency>
            <groupId>org.r4d5.teamcity</groupId>
            <artifactId>todo-teamcity-plugin-server</artifactId>
-           <version>1.0-SNAPSHOT</version>
+           <version>1.0.0</version>
       </dependency>
   </dependencies>
   <build>
