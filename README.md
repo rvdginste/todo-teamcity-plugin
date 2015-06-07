@@ -1,7 +1,7 @@
 
 # Todo TeamCity plugin
 
-This TeamCity plugin provides a new build runner, which will scan the
+This [TeamCity] plugin provides a new build runner, which will scan the
 files in your project and build a report with 'todo's based on that.
 
 
@@ -25,7 +25,7 @@ Building your own version of the plugin is not difficult if you have
 experience with Maven.  Using maven, the plugin can be built as
 follows:
 
-    mvn -DskipTests clean package
+    mvn clean package
 
 
 This will compile all submodules and package everything in a zip,
@@ -93,6 +93,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-
+[TeamCity]: https://www.jetbrains.com/teamcity
 [TeamCity Documentation Site]: https://confluence.jetbrains.com/display/TCD9/Installing+Additional+Plugins
-[JetBrains]: http://www.jetbrains.com
+[JetBrains]: https://www.jetbrains.com
