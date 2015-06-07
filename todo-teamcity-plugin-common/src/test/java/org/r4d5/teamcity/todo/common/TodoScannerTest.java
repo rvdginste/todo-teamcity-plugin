@@ -18,6 +18,7 @@
 package org.r4d5.teamcity.todo.common;
 
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Ignore
 public class TodoScannerTest {
 
     @Test
