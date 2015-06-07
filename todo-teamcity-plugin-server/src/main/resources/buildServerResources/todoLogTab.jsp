@@ -1,7 +1,6 @@
-<%@ page import="org.r4d5.teamcity.todo.common.TodoBuildRunnerConstants" %>
-<%@ page import="org.r4d5.teamcity.todo.common.TodoScanResult" %>
-<%@ page import="org.r4d5.teamcity.todo.common.TodoLine" %>
 <%@ page import="org.r4d5.teamcity.todo.common.TodoLevel" %>
+<%@ page import="org.r4d5.teamcity.todo.common.TodoLine" %>
+<%@ page import="org.r4d5.teamcity.todo.common.TodoScanResult" %>
 <%@ page import="org.unbescape.html.HtmlEscape" %>
 <%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
