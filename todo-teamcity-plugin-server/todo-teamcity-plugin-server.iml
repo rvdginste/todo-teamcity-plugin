@@ -13,6 +13,7 @@
     <orderEntry type="module" module-name="todo-teamcity-plugin-common" />
     <orderEntry type="library" name="Maven: com.googlecode.juniversalchardet:juniversalchardet:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:54.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.unbescape:unbescape:1.1.1.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains.teamcity:server-api:9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:jstl:1.1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.tomcat:el-api:6.0.16" level="project" />
