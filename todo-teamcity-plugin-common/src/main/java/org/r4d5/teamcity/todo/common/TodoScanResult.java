@@ -23,6 +23,9 @@ import java.nio.file.Path;
 
 public class TodoScanResult implements Serializable {
 
+    // stable serialization
+    private static final long serialVersionUID = 7114331626146889652L;
+
     final String relativePath;
     final String charsetName;
     final long runTime;

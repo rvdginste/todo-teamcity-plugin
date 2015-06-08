@@ -21,6 +21,9 @@ import java.io.Serializable;
 
 public class TodoLine implements Serializable {
 
+    // stable serialization
+    private static final long serialVersionUID = 4302086905378187385L;
+
     final int lineNumber;
     final TodoLevel level;
     final String line;
