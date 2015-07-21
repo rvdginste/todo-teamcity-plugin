@@ -20,10 +20,7 @@ package org.r4d5.teamcity.todo.common;
 import junit.framework.Assert;
 import org.junit.Test;
 
-/**
- * Created by ruben on 6/7/15.
- */
-public class ContextBufferTest {
+public class ContextBufferTests {
 
     @Test
     public void buffer_is_full_1() {

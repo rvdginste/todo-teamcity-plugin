@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Ignore
-public class TodoScannerTest {
+public class TodoScannerTests {
 
     @Test
     public void Test_1() throws IOException {
@@ -46,13 +46,10 @@ public class TodoScannerTest {
     @Test
     public void Test_2() throws IOException {
 
-        Path root = Paths.get("/tmp/bumpa");
+        Path root = Paths.get("c:\\temp");
 
         List<String> includes = new ArrayList<>();
-        includes.add("*.cs");
-        includes.add("**/*.cs");
-        includes.add("*.java");
-        includes.add("**/*.java");
+        includes.add("**/*.sql");
 
         List<String> excludes = new ArrayList<>();
         excludes.add("*.java");
@@ -78,11 +75,11 @@ public class TodoScannerTest {
         Files.walkFileTree(root, visitor);
         List<Path> foundPaths = visitor.getFoundPaths();
 
-        List<String> minors = new ArrayList<String>();
+        List<String> minors = new ArrayList<>();
         minors.add(".*[Ii][Dd][Ee][Aa].*");
-        List<String> majors = new ArrayList<String>();
+        List<String> majors = new ArrayList<>();
         majors.add(".*[Tt][Oo][Dd][Oo].*");
-        List<String> criticals = new ArrayList<String>();
+        List<String> criticals = new ArrayList<>();
         criticals.add(".*[Mm][Uu][Dd][Oo].*");
         TodoPatternScanner scanner = new TodoPatternScanner(minors, majors, criticals);
 
