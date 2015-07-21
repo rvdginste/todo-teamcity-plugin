@@ -40,19 +40,11 @@ public class GlobPatternMatcherFileVisitor extends BasePatternMatcherFileVisitor
     }
 
     @Override
-    protected PathMatcher getPathMatcher(Path root, String pattern) {
-
-        // take into account escaping of 'special' values in the root path
+    protected PathMatcher getPathMatcher(String pattern) {
 
         return FileSystems
                 .getDefault()
-                .getPathMatcher(
-                        String.format(
-                                "glob:%1$s%2$s%3$s",
-                                root.normalize().toString(),
-                                FileSystems.getDefault().getSeparator(),
-                                pattern)
-                );
+                .getPathMatcher(String.format("glob:%1$s", pattern));
     }
 
 }

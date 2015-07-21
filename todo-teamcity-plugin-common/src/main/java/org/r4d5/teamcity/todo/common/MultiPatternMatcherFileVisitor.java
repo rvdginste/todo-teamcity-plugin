@@ -40,7 +40,7 @@ public class MultiPatternMatcherFileVisitor extends BasePatternMatcherFileVisito
     }
 
     @Override
-    protected PathMatcher getPathMatcher(Path root, String typeAndPattern) {
+    protected PathMatcher getPathMatcher(String typeAndPattern) {
 
         int split = typeAndPattern.indexOf(':');
         String type = typeAndPattern.substring(0, split - 1);
@@ -48,13 +48,6 @@ public class MultiPatternMatcherFileVisitor extends BasePatternMatcherFileVisito
 
         return FileSystems
                 .getDefault()
-                .getPathMatcher(
-                        String.format(
-                                "%1$s:%2$s%3$s%4$s",
-                                type,
-                                root.normalize().toString(),
-                                FileSystems.getDefault().getSeparator(),
-                                pattern)
-                );
+                .getPathMatcher(String.format("%1$s:%2$s", type, pattern));
     }
 }

@@ -94,7 +94,7 @@ public class TodoScanner {
         statusLogger.info("Start gathering the files to be checked.");
         GlobPatternMatcherFileVisitor visitor = new GlobPatternMatcherFileVisitor(workingRoot, includes, excludes, interruptionChecker);
         Files.walkFileTree(workingRoot, visitor);
-        List<Path> foundPaths = visitor.getFoundPaths();
+        List<Path> foundPaths = visitor.getFoundRelativePaths();
         statusLogger.info(String.format("Gathered %1$d files.", foundPaths.size()));
 
         // execute the scanning
@@ -117,13 +117,12 @@ public class TodoScanner {
         // scan for ToDo patterns
         ArrayList<TodoScanResult> scanResults = new ArrayList<>(foundPaths.size());
         for (Path path : foundPaths) {
-            Path relativePath = workingRoot.relativize(path);
-            statusLogger.info(String.format("Scanning file [%1$s]", relativePath.toString()));
+            statusLogger.info(String.format("Scanning file [%1$s]", path.toString()));
 
-            Path scanResultPath = reportingRoot.resolve(relativePath);
+            Path scanResultPath = reportingRoot.resolve(path);
             statusLogger.info(String.format("Scan result into [%1$s]", scanResultPath.toString()));
 
-            final TodoScanResult result = scanner.scan(workingRoot, path);
+            final TodoScanResult result = scanner.scan(workingRoot, workingRoot.resolve(path));
             scanResults.add(result);
             interruptionChecker.isInterrupted();
         }

@@ -32,6 +32,7 @@ public abstract class BasePatternMatcherFileVisitor extends SimpleFileVisitor<Pa
     final private List<PathMatcher> excludeMatchers = new ArrayList<>();
     final private List<Path> foundPaths = new ArrayList<>();
     final private InterruptionChecker interruptionChecker;
+    final private Path root;
 
     public BasePatternMatcherFileVisitor(
             Path root,
@@ -45,23 +46,24 @@ public abstract class BasePatternMatcherFileVisitor extends SimpleFileVisitor<Pa
             List<String> includes,
             List<String> excludes,
             InterruptionChecker interruptionChecker) {
+        // root path
+        this.root = root;
 
         // interruption checker
         this.interruptionChecker = interruptionChecker;
 
         // process includes
         for (String include : includes) {
-            includeMatchers.add(getPathMatcher(root, include));
+            includeMatchers.add(getPathMatcher(include));
         }
 
         // process excludes
         for (String exclude : excludes) {
-            excludeMatchers.add(getPathMatcher(root, exclude));
+            excludeMatchers.add(getPathMatcher(exclude));
         }
-
     }
 
-    protected abstract PathMatcher getPathMatcher(Path root, String pattern);
+    protected abstract PathMatcher getPathMatcher(String pattern);
 
     private boolean isMatchFor(Path file, List<PathMatcher> matchers) {
         for (PathMatcher matcher : matchers) {
@@ -85,14 +87,24 @@ public abstract class BasePatternMatcherFileVisitor extends SimpleFileVisitor<Pa
         if (interruptionChecker != null && interruptionChecker.isInterrupted()) {
             return FileVisitResult.TERMINATE;
         }
-        if (isIncluded(file) && !isExcluded(file)) {
-            foundPaths.add(file);
+
+        Path relativeFile = root.relativize(file);
+        if (isIncluded(relativeFile) && !isExcluded(relativeFile)) {
+            foundPaths.add(relativeFile);
         }
+
         return super.visitFile(file, attrs);
     }
 
-    public List<Path> getFoundPaths() {
+    public List<Path> getFoundRelativePaths() {
         return foundPaths;
     }
 
+    public List<Path> getFoundAbsolutePaths() {
+        List<Path> result = new ArrayList<>();
+        for (Path p : foundPaths) {
+            result.add(root.resolve(p));
+        }
+        return result;
+    }
 }

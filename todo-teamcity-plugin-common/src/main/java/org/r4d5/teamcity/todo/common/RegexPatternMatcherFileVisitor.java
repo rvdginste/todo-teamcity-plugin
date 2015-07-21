@@ -40,18 +40,11 @@ public class RegexPatternMatcherFileVisitor extends BasePatternMatcherFileVisito
     }
 
     @Override
-    protected PathMatcher getPathMatcher(Path root, String pattern) {
-
-        // take into account escaping of 'special' values in the root path
+    protected PathMatcher getPathMatcher(String pattern) {
 
         return FileSystems
                 .getDefault()
                 .getPathMatcher(
-                        String.format(
-                                "regex:%1$s%2$s%3$s",
-                                root.normalize().toString(),
-                                FileSystems.getDefault().getSeparator(),
-                                pattern)
-                );
+                        String.format("regex:%1$s", pattern));
     }
 }

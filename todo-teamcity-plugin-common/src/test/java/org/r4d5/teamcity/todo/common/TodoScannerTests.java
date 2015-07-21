@@ -56,7 +56,7 @@ public class TodoScannerTests {
 
         GlobPatternMatcherFileVisitor visitor = new GlobPatternMatcherFileVisitor(root, includes, excludes);
         Files.walkFileTree(root, visitor);
-        List<Path> foundPaths = visitor.getFoundPaths();
+        List<Path> foundPaths = visitor.getFoundAbsolutePaths();
         Assert.assertNotNull(foundPaths);
     }
 
@@ -73,7 +73,7 @@ public class TodoScannerTests {
 
         GlobPatternMatcherFileVisitor visitor = new GlobPatternMatcherFileVisitor(root, includes, excludes);
         Files.walkFileTree(root, visitor);
-        List<Path> foundPaths = visitor.getFoundPaths();
+        List<Path> foundPaths = visitor.getFoundAbsolutePaths();
 
         List<String> minors = new ArrayList<>();
         minors.add(".*[Ii][Dd][Ee][Aa].*");
