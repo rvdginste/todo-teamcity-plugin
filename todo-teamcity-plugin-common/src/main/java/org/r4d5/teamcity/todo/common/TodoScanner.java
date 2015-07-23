@@ -118,10 +118,6 @@ public class TodoScanner {
         ArrayList<TodoScanResult> scanResults = new ArrayList<>(foundPaths.size());
         for (Path path : foundPaths) {
             statusLogger.info(String.format("Scanning file [%1$s]", path.toString()));
-
-            Path scanResultPath = reportingRoot.resolve(path);
-            statusLogger.info(String.format("Scan result into [%1$s]", scanResultPath.toString()));
-
             final TodoScanResult result = scanner.scan(workingRoot, workingRoot.resolve(path));
             scanResults.add(result);
             interruptionChecker.isInterrupted();

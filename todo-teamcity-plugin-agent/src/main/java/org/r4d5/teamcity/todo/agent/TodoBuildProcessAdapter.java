@@ -71,15 +71,15 @@ public class TodoBuildProcessAdapter extends AbstractBuildProcessAdapter {
         try {
             // initialize working root path
             final String workingRootCanonicalPath = workingRoot.getCanonicalPath();
-            progressLogger.warning(String.format("The working root path is [%1$s].", workingRootCanonicalPath));
+            progressLogger.message(String.format("The working root path is [%1$s].", workingRootCanonicalPath));
             final Path workingRootPath = Paths.get(workingRootCanonicalPath);
 
             // initialize reporting root path
             final String reportingRootCanonicalPath = reportingRoot.getCanonicalPath();
-            progressLogger.warning(String.format("The reporting root path is [%1$s].", reportingRootCanonicalPath));
+            progressLogger.message(String.format("The reporting root path is [%1$s].", reportingRootCanonicalPath));
             final Path reportingRootPath = Paths.get(reportingRootCanonicalPath, TodoBuildRunnerConstants.TODO_REPORTING_FOLDER);
             Files.createDirectory(reportingRootPath);
-            progressLogger.warning(String.format("Create directory for reporting [%1$s].", reportingRootPath));
+            progressLogger.message(String.format("Create directory for reporting [%1$s].", reportingRootPath));
 
             // initialize the Todo Scanner
             final TodoScanner scanner = new TodoScanner(
