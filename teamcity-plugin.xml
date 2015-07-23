@@ -5,11 +5,11 @@
     <display-name>Todo Teamcity Plugin</display-name>
     <version>@Version@</version>
     <description>Todo Build Runner</description>
-    <download-url></download-url>
+    <download-url>https://github.com/rvdginste/todo-teamcity-plugin</download-url>
     <email>ruben.vandeginste@gmail.com</email>
     <vendor>
       <name>Ruben Vandeginste</name>
-      <url></url>
+      <url>https://github.com/rvdginste/todo-teamcity-plugin</url>
       <logo></logo>
     </vendor>
   </info>
