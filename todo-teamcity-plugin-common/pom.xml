@@ -6,7 +6,7 @@
     <parent>
         <artifactId>todo-teamcity-plugin</artifactId>
         <groupId>org.r4d5.teamcity</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>todo-teamcity-plugin-common</artifactId>
